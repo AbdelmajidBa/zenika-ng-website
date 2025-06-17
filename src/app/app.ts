@@ -14,14 +14,14 @@ export class App {
 
   protected total = 0;
 
-  products: ProductModel[] = [
+  protected products: ProductModel[] = [
     {
       "id": "welsch",
       "title": "Coding the welsch",
       "description": "Tee-shirt col rond - Homme",
       "photo": "/assets/coding-the-welsch.jpg",
       "price": 20,
-      "stock": 2
+      "stock": 5
     },
     {
       "id": "world",
@@ -50,19 +50,18 @@ export class App {
   ];
 
  get hasProductsInStock(): boolean {
-  const hasStock = this.products.some(product => product.stock > 0);
-  if(hasStock){
-    return true;
-  }
-  return false;
+  return this.products.some(product => product.stock > 0);
+  // or return this.products.some( ({stock}) => stock > 0);
+  
  }
 
   ajouterAuPanier(product: ProductModel) {
     console.info(JSON.stringify(product));
+    
     this.total += product.price;
+    console.info(this.total);
 
     product.stock -=1;
-    console.info(this.total);
     console.info(JSON.stringify(product));
   }
 }

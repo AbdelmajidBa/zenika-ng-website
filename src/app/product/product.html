@@ -1,6 +1,6 @@
 
 <div class="col">
-    <div class="card h-100 text-center">
+    <div class="card h-100 text-center" [ngClass]="{'text-bg-warning': isLastChance }">
     <img class="card-img-top" src="{{ product().photo }}" alt="Product image" />
     <div class="card-header">
         <small>{{ product().description }}</small>
