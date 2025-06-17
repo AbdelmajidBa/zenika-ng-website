@@ -12,9 +12,9 @@ import { ProductModel } from './product/product.types';
 })
 export class App {
 
-  protected total = 0;
+  public total = 0;
 
-  protected products: ProductModel[] = [
+  public products: ProductModel[] = [
     {
       "id": "welsch",
       "title": "Coding the welsch",
