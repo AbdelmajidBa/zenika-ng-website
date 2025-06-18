@@ -1,20 +1,7 @@
-
-<!-- <app-menu  [total]="total()"/> -->
- <app-menu  />
-{{catalogService.products() |  json}}
-
-{{basketService.items() |  json}}
-
-
-
-<main class="py-4 container">
-
-  <router-outlet />
-
-  <!-- <header class="p-4 mb-4 bg-light rounded-3">
+<header class="p-4 mb-4 bg-light rounded-3">
     <h1>{{ appTitle }} </h1>
     <p>Votre panier s'élève à  {{ total() | currency }}  </p>
-    <p class="mb-0"><a class="btn btn-primary btn-large">Voir mon panier</a></p>
+    <p class="mb-0"><a class="btn btn-primary btn-large" routerLink="/basket">Voir mon panier</a></p>
   </header>
 
   <h2 class="h4">Catalogue</h2>
@@ -31,7 +18,4 @@
 
   } @else {
     <div>Désolé, notre stock est vide !</div>
-  } -->
-
-</main>
-
+  }

@@ -1,21 +1,19 @@
-import { Component, computed, inject, OnInit, signal } from '@angular/core';
-import { Menu } from "./menu/menu";
-import { Product } from "./product/product";
-import { ProductModel } from './product/product.types';
+import { Component, inject, OnInit, signal } from '@angular/core';
+import { Catalog } from '../services/catalog';
+import { Basket } from '../services/basket';
+import { APP_TITLE } from '../app.token';
+import { ProductModel } from '../product/product.types';
 import { CurrencyPipe, JsonPipe } from '@angular/common';
-import { Catalog } from './services/catalog';
-import { Basket } from './services/basket';
-import { APP_TITLE } from './app.token';
-import { RouterOutlet } from '@angular/router';
+import { Product } from "../product/product";
+import { RouterLink } from '@angular/router';
 
 @Component({
-  selector: 'app-root',
-  imports: [Menu, Product, JsonPipe, CurrencyPipe, RouterOutlet ],
-  standalone: true,
-  templateUrl: './app.html',
-  styleUrl: './app.css'
+  selector: 'app-catalog-component',
+  imports: [CurrencyPipe, Product, RouterLink ],
+  templateUrl: './catalog-component.html',
+  styleUrl: './catalog-component.css'
 })
-export class App implements OnInit {
+export class CatalogComponent implements OnInit {
 
   public catalogService = inject(Catalog);
   public basketService  = inject(Basket);
