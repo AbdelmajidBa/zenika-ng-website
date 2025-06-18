@@ -1,67 +1,90 @@
-import { Component } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { Menu } from "./menu/menu";
 import { Product } from "./product/product";
 import { ProductModel } from './product/product.types';
+import { JsonPipe } from '@angular/common';
+import { Catalog } from './services/catalog';
+import { Basket } from './services/basket';
+import { APP_TITLE } from './app.token';
 
 @Component({
   selector: 'app-root',
-  imports: [Menu, Product],
+  imports: [Menu, Product, JsonPipe],
   standalone: true,
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
 export class App {
 
-  public total = 0;
+  public catalogService = inject(Catalog);
+  public basketService  = inject(Basket);
+  public appTitle = inject(APP_TITLE);
+  public total = signal<number>(0);
 
-  public products: ProductModel[] = [
-    {
-      "id": "welsch",
-      "title": "Coding the welsch",
-      "description": "Tee-shirt col rond - Homme",
-      "photo": "/assets/coding-the-welsch.jpg",
-      "price": 20,
-      "stock": 5
-    },
-    {
-      "id": "world",
-      "title": "Coding the world",
-      "description": "Tee-shirt col rond - Homme",
-      "photo": "/assets/coding-the-world.jpg",
-      "price": 18,
-      "stock": 1
-    },
-    {
-      "id": "vador",
-      "title": "Duck Vador",
-      "description": "Tee-shirt col rond - Femme",
-      "photo": "/assets/coding-the-stars.jpg",
-      "price": 21,
-      "stock": 2
-    },
-    {
-      "id": "snow",
-      "title": "Coding the snow",
-      "description": "Tee-shirt col rond - Femme",
-      "photo": "/assets/coding-the-snow.jpg",
-      "price": 19,
-      "stock": 2
-    }
-  ];
+  // public products = signal<ProductModel[]>([
+  //   {
+  //     "id": "welsch",
+  //     "title": "Coding the welsch",
+  //     "description": "Tee-shirt col rond - Homme",
+  //     "photo": "/assets/coding-the-welsch.jpg",
+  //     "price": 20,
+  //     "stock": 5
+  //   },
+  //   {
+  //     "id": "world",
+  //     "title": "Coding the world",
+  //     "description": "Tee-shirt col rond - Homme",
+  //     "photo": "/assets/coding-the-world.jpg",
+  //     "price": 18,
+  //     "stock": 1
+  //   },
+  //   {
+  //     "id": "vador",
+  //     "title": "Duck Vador",
+  //     "description": "Tee-shirt col rond - Femme",
+  //     "photo": "/assets/coding-the-stars.jpg",
+  //     "price": 21,
+  //     "stock": 2
+  //   },
+  //   {
+  //     "id": "snow",
+  //     "title": "Coding the snow",
+  //     "description": "Tee-shirt col rond - Femme",
+  //     "photo": "/assets/coding-the-snow.jpg",
+  //     "price": 19,
+  //     "stock": 2
+  //   }
+  // ]) ;
 
  get hasProductsInStock(): boolean {
-  return this.products.some(product => product.stock > 0);
+  //return this.products().some(product => product.stock > 0);
   // or return this.products.some( ({stock}) => stock > 0);
-  
+  return this.catalogService.hasProductsInStock();
  }
+ 
+ //hasProductsInStock = computed(() => this.products().some(product => product.stock > 0));
+ //hasProductsInStock = computed(() => this.products().some(product => product.stock > 0));
 
-  ajouterAuPanier(product: ProductModel) {
-    console.info(JSON.stringify(product));
+  ajouterAuPanier(productModel: ProductModel) {
     
-    this.total += product.price;
-    console.info(this.total);
+    this.catalogService.decreaseStock(productModel.id);
 
-    product.stock -=1;
-    console.info(JSON.stringify(product));
+    const item = {
+      id: productModel.id,
+      title: productModel.title,
+      price: productModel.price
+    };
+    this.basketService.addItem(item);
+    // this.products.update((products) =>
+    //   products.map((product) => {
+    //     if (product.id === productModel.id) {
+    //       return { ...product, stock: product.stock - 1 };
+    //     }
+    //     return product;
+    //   }),
+    // );
+
+    //this.total.update((total) => total + productModel.price);
+    this.total.set(this.basketService.total());
   }
 }
