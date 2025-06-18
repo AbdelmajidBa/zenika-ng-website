@@ -1,4 +1,4 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { Menu } from "./menu/menu";
 import { Product } from "./product/product";
 import { ProductModel } from './product/product.types';
@@ -14,7 +14,7 @@ import { APP_TITLE } from './app.token';
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
-export class App {
+export class App implements OnInit {
 
   public catalogService = inject(Catalog);
   public basketService  = inject(Basket);
@@ -74,17 +74,26 @@ export class App {
       title: productModel.title,
       price: productModel.price
     };
-    this.basketService.addItem(item);
-    // this.products.update((products) =>
-    //   products.map((product) => {
-    //     if (product.id === productModel.id) {
-    //       return { ...product, stock: product.stock - 1 };
-    //     }
-    //     return product;
-    //   }),
-    // );
-
-    //this.total.update((total) => total + productModel.price);
+    //this.basketService.addItem(item);
+    this.basketService.addItemToSrver(item)
+    .subscribe(
+      { 
+        next: added => this.catalogService.decreaseStock(productModel.id),
+        error: err => console.error(err)
+      });
+   
     this.total.set(this.basketService.total());
+  }
+
+  constructor(){
+    
+  }
+  ngOnInit(): void {
+    this.catalogService.fetchProducts()
+    .subscribe({ error: err => console.error(err)});
+
+
+    this.basketService.fetchBasket()
+      .subscribe({ error: err => console.error(err)});
   }
 }
