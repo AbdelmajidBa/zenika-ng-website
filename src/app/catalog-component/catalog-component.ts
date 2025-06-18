@@ -20,51 +20,13 @@ export class CatalogComponent implements OnInit {
   public appTitle = inject(APP_TITLE);
   public total = signal<number>(0);
 
-  // public products = signal<ProductModel[]>([
-  //   {
-  //     "id": "welsch",
-  //     "title": "Coding the welsch",
-  //     "description": "Tee-shirt col rond - Homme",
-  //     "photo": "/assets/coding-the-welsch.jpg",
-  //     "price": 20,
-  //     "stock": 5
-  //   },
-  //   {
-  //     "id": "world",
-  //     "title": "Coding the world",
-  //     "description": "Tee-shirt col rond - Homme",
-  //     "photo": "/assets/coding-the-world.jpg",
-  //     "price": 18,
-  //     "stock": 1
-  //   },
-  //   {
-  //     "id": "vador",
-  //     "title": "Duck Vador",
-  //     "description": "Tee-shirt col rond - Femme",
-  //     "photo": "/assets/coding-the-stars.jpg",
-  //     "price": 21,
-  //     "stock": 2
-  //   },
-  //   {
-  //     "id": "snow",
-  //     "title": "Coding the snow",
-  //     "description": "Tee-shirt col rond - Femme",
-  //     "photo": "/assets/coding-the-snow.jpg",
-  //     "price": 19,
-  //     "stock": 2
-  //   }
-  // ]) ;
+  
 
  get hasProductsInStock(): boolean {
-  //return this.products().some(product => product.stock > 0);
-  // or return this.products.some( ({stock}) => stock > 0);
   return this.catalogService.hasProductsInStock();
  }
  
- //hasProductsInStock = computed(() => this.products().some(product => product.stock > 0));
- //hasProductsInStock = computed(() => this.products().some(product => product.stock > 0));
-
-  ajouterAuPanier(productModel: ProductModel) {
+ ajouterAuPanier(productModel: ProductModel) {
     
     this.catalogService.decreaseStock(productModel.id);
 
@@ -73,7 +35,6 @@ export class CatalogComponent implements OnInit {
       title: productModel.title,
       price: productModel.price
     };
-    //this.basketService.addItem(item);
     this.basketService.addItemToSrver(item)
     .subscribe(
       { 
@@ -84,9 +45,6 @@ export class CatalogComponent implements OnInit {
     this.total.set(this.basketService.total());
   }
 
-  constructor(){
-    
-  }
   ngOnInit(): void {
     this.catalogService.fetchProducts()
     .subscribe({ error: err => console.error(err)});

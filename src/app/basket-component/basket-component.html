@@ -1,21 +1,24 @@
+
 <h2 class="h4">Mon panier</h2>
 
-<div class="card">
-  <div class="card-header">2 articles</div>
+@if (items()) {
+  <div class="card">
+    <div class="card-header">{{ items().length }} {{ items().length === 1 ? 'article' : 'articles' }}</div>
 
-  <ul class="list-group list-group-flush">
-    <!-- Use `@for` to loop over the basket items -->
-    <li class="list-group-item d-flex justify-content-between">
-      Coding the snow <span class="text-primary">19 €</span>
-    </li>
+    <ul class="list-group list-group-flush">
+      @for (item of items(); track item) {
+        <li class="list-group-item d-flex justify-content-between">
+          {{ item.title }} <span class="text-primary">{{ item.price | currency }}</span>
+        </li>
+      }
 
-    <li class="list-group-item d-flex justify-content-between">
-      Coding the world <span class="text-primary">18 €</span>
-    </li>
-    <!-- End of: Use `@for` to loop over the basket items -->
-
-    <li class="list-group-item d-flex justify-content-between fw-bold">
-      Total <span class="text-primary">37 €</span>
-    </li>
-  </ul>
-</div>
+      @if (items().length) {
+        <li class="list-group-item d-flex justify-content-between fw-bold">
+          Total <span class="text-primary">{{ total() | currency }}</span>
+        </li>
+      } @else {
+        <li class="list-group-item text-secondary">Votre panier est vide</li>
+      }
+    </ul>
+  </div>
+}

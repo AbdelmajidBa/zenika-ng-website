@@ -9,51 +9,18 @@ import { Observable, tap } from 'rxjs';
 export class Catalog {
   
   private httpClient = inject(HttpClient);
-  private _products = signal<ProductModel[]>([
-    // {
-    //   "id": "welsch",
-    //   "title": "Coding the welsch",
-    //   "description": "Tee-shirt col rond - Homme",
-    //   "photo": "/assets/coding-the-welsch.jpg",
-    //   "price": 20,
-    //   "stock": 5
-    // },
-    // {
-    //   "id": "world",
-    //   "title": "Coding the world",
-    //   "description": "Tee-shirt col rond - Homme",
-    //   "photo": "/assets/coding-the-world.jpg",
-    //   "price": 18,
-    //   "stock": 1
-    // },
-    // {
-    //   "id": "vador",
-    //   "title": "Duck Vador",
-    //   "description": "Tee-shirt col rond - Femme",
-    //   "photo": "/assets/coding-the-stars.jpg",
-    //   "price": 21,
-    //   "stock": 2
-    // },
-    // {
-    //   "id": "snow",
-    //   "title": "Coding the snow",
-    //   "description": "Tee-shirt col rond - Femme",
-    //   "photo": "/assets/coding-the-snow.jpg",
-    //   "price": 19,
-    //   "stock": 2
-    // }
-  ]) ;
+  private _products = signal<ProductModel[]>([]) ;
 
   products = this._products.asReadonly(); 
 
-  hasProductsInStock = computed(() => this.products().some(product => product.stock > 0));
+  hasProductsInStock = computed<boolean>(() => (this._products() ?? []).some(({ stock }) => stock > 0));
 
    fetchProducts(): Observable<ProductModel[]> {
     return this.httpClient
       .get<ProductModel[]>('http://localhost:8080/api/products')
       .pipe(tap((products) => this._products.set(products)));
   }
-
+ 
   decreaseStock(productId: string): void { 
 
      this._products.update((products) =>
@@ -67,5 +34,4 @@ export class Catalog {
 
   }
 
-  constructor() { }
 }
