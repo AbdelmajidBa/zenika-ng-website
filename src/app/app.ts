@@ -2,14 +2,14 @@ import { Component, computed, inject, signal } from '@angular/core';
 import { Menu } from "./menu/menu";
 import { Product } from "./product/product";
 import { ProductModel } from './product/product.types';
-import { JsonPipe } from '@angular/common';
+import { CurrencyPipe, JsonPipe } from '@angular/common';
 import { Catalog } from './services/catalog';
 import { Basket } from './services/basket';
 import { APP_TITLE } from './app.token';
 
 @Component({
   selector: 'app-root',
-  imports: [Menu, Product, JsonPipe],
+  imports: [Menu, Product, JsonPipe, CurrencyPipe],
   standalone: true,
   templateUrl: './app.html',
   styleUrl: './app.css'
